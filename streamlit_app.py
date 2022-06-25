@@ -5,4 +5,4 @@ im1 = 'https://dl.airtable.com/.attachmentThumbnails/49ab1ed32adabaa49408b3fd81d
 
 post_text = st.text_input ("Enter Post Text: ")
 
-im = Image.open("https://dl.airtable.com/.attachmentThumbnails/1fb3bfc74fd118479c8d3b4392a0c20f/2967c81a")
+im = Image.open("https://dl.airtable.com/.attachmentThumbnails/1fb3bfc74fd118479c8d3b4392a0c20f/2967c81a" + ".png")
