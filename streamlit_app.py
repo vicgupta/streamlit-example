@@ -8,4 +8,7 @@ im1 = "https://images.pexels.com/photos/10757791/pexels-photo-10757791.jpeg"
 
 post_text = st.text_input ("Enter Post Text: ")
 
-im = Image.open(requests.get(im1, stream=True).raw)
+image = Image.open(requests.get(im1, stream=True).raw)
+
+st.image(image, caption='Sunrise by the mountains')
+
