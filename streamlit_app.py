@@ -10,6 +10,19 @@ post_text = st.text_input ("Enter Post Text: ")
 
 image = Image.open(requests.get(im1, stream=True).raw)
 
+width, height = image.size 
+
+draw = ImageDraw.Draw(image)
+
+text = 'Welcome to Universe!'
+textwidth, textheight = draw.textsize(text)
+
+margin = 10
+x = width - textwidth - margin
+y = height - textheight - margin
+
+draw.text((x, y), text)
+
 #st.image(image, caption='Sunrise by the mountains')
 st.image(image)
 
