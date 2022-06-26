@@ -22,8 +22,8 @@ x = width - textwidth - margin
 y = height - textheight - margin
 
 draw.text((x, y), text)
-image.save('welcometouniverse.jpg')
+#image.save('welcometouniverse.jpg')
 #st.image('welcometouniverse.jpg')
 
-st.image(image)
+st.image(image.show())
 
