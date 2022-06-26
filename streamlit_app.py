@@ -24,6 +24,6 @@ y = height - textheight - margin
 draw.text((x, y), text)
 #image.save('welcometouniverse.jpg')
 #st.image('welcometouniverse.jpg')
-
-st.image(image.show())
+image.show()
+#st.image(image.show())
 
