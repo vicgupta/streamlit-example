@@ -3,16 +3,6 @@ import openai
 import pyperclip
 import requests
 
-
-def insert_content(contentReq, contentRes):
-    try:
-        post1_url = "https://clean-table.pockethost.io/api/collections/openai_content/records"
-        post1_data = {"content_request": contentReq, "content_response": contentRes}
-        requests.post(post1_url, json=post1_data)
-    except:
-         print("Error inserting content")
-
-
 def createImageFromPrompt(prompt):
     response = openai.Image.create(
         prompt=prompt, 
@@ -63,7 +53,6 @@ elif submit_btn:
         openai.api_key = api_key
         response = createTextFromPrompt(contentSelect, prompt)
         pyperclip.copy(response)
-        insert_content(contentSelect + ' on ' + prompt, response)
         st.write(response)
     else:
         st.write("No API Key")
