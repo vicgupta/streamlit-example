@@ -1,29 +1,71 @@
 import streamlit as st
-from PIL import Image, ImageDraw, ImageFont
+import openai
+import pyperclip
 import requests
 
-#https://dl.airtable.com/.attachmentThumbnails/b4cea114fb3157dfb0affbd1bac9f0c9/fc94c3db
-im1 = 'https://dl.airtable.com/.attachmentThumbnails/49ab1ed32adabaa49408b3fd81df324c/bd597b11'
-#im1 = "https://images.pexels.com/photos/10757791/pexels-photo-10757791.jpeg"
 
-post_text = st.text_input ("Enter Post Text: ")
+def insert_content(contentReq, contentRes):
+    try:
+        post1_url = "https://clean-table.pockethost.io/api/collections/openai_content/records"
+        post1_data = {"content_request": contentReq, "content_response": contentRes}
+        requests.post(post1_url, json=post1_data)
+    except:
+         print("Error inserting content")
 
-image = Image.open(requests.get(im1, stream=True).raw)
 
-width, height = image.size 
+def createImageFromPrompt(prompt):
+    response = openai.Image.create(
+        prompt=prompt, 
+        n=3,
+        model="image-alpha-001", 
+        size="512x512")
+    return response['data'][0]["url"]
 
-draw = ImageDraw.Draw(image)
+def createTextFromPrompt(contentSelect, prompt):
+        msg = []
+        roleType = '''
+        I want you to act as a content writer very proficient in spoken and written English.
+        Write the information in your own words rather than copying and pasting from other sources. The content must be plagiarism free and unique.
+        Write the content in a formal and conversational style as if it were written by a human using the "we" form.
+        The content should be detailed, rich and comprehensive.
+        Do not repeat or remind me what I asked you for.  Do not apologize. Do not self-reference. Do now use generic filler phrases.
+        Get to the point precisely and accurately without explaining to me what and why.
+        '''
+        role = {"role": "system", "content": roleType}
+        msg.append(role)
 
-text = 'Welcome to Universe!'
-textwidth, textheight = draw.textsize(text)
+        msg.append({"role": "user", "content": 'Create ' + contentSelect + ' on ' + prompt})
+        completions = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo',
+            messages=msg
+        )
+        response = completions.choices[0].message.content
+        msg.append({"role": "assistant", "content": response})
+        return response
 
-margin = 10
-x = width - textwidth - margin
-y = height - textheight - margin
+#api_key = os.environ.get('OPENAI_API_KEY')
 
-draw.text((x, y), text)
-#image.save('welcometouniverse.jpg')
-#st.image('welcometouniverse.jpg')
-image.show()
-#st.image(image.show())
+api_key = st.text_input ("Enter the API Key", type="password")
+contentSelect = st.selectbox('Select one to create:', ['A tweet of at least 140 words with hashtags',
+                                                       'A paragraph of at least 200 words', 
+                                                       'A blog post of at least 1000 words', 
+                                                       'An article of at least 2000 words', 
+                                                       'An outline with at least 10 bullet points'])
+#ai code programmer
+prompt = st.text_input ("Enter the subject or heading:")
+submit_btn = st.button("Submit")
+cancel_btn = st.button("Cancel")
+
+if cancel_btn:
+    st.write("")
+elif submit_btn:
+    if api_key:
+        openai.api_key = api_key
+        response = createTextFromPrompt(contentSelect, prompt)
+        pyperclip.copy(response)
+        insert_content(contentSelect + ' on ' + prompt, response)
+        st.write(response)
+    else:
+        st.write("No API Key")
+
 
