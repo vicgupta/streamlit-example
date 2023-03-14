@@ -33,8 +33,6 @@ def createTextFromPrompt(contentSelect, prompt):
         msg.append({"role": "assistant", "content": response})
         return response
 
-#api_key = os.environ.get('OPENAI_API_KEY')
-
 api_key = st.text_input ("Enter the API Key", type="password")
 contentSelect = st.selectbox('Select one to create:', ['A tweet of at least 140 words with hashtags',
                                                        'A paragraph of at least 200 words', 
