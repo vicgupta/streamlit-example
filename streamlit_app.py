@@ -50,7 +50,6 @@ elif submit_btn:
     if api_key:
         openai.api_key = api_key
         response = createTextFromPrompt(contentSelect, prompt)
-        pyperclip.copy(response)
         st.write(response)
     else:
         st.write("No API Key")
